@@ -1,0 +1,30 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install native system dependencies for OpenCV, GPIO interfaces, and I2C mapping
+RUN apt-get update && apt-get install -y \
+    python3-opencv \
+    libglib2.0-0 \
+    libgl1-mesa-glx \
+    i2c-tools \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install core python packages
+RUN pip install --no-cache-dir \
+    opencv-python-headless \
+    ultralytics \
+    gpiozero \
+    requests \
+    rp1-py
+
+# Pre-download the weights file so the Pi doesn't hang fetching it on first hardware trigger
+RUN python -c "from ultralytics import YOLO; model = YOLO('yolov8n.pt')"
+
+# Copy the running script into the container directory
+COPY cat_cam.py .
+
+# Force Python outputs to stream directly to docker logs interface instantly
+ENV PYTHONUNBUFFERED=1
+
+CMD ["python", "cat_cam.py"]

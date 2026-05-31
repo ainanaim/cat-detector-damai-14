@@ -1,0 +1,13 @@
+# Secrets and environment configurations
+.env
+.env.production
+.env.local
+
+# Local build artifacts and server configs
+dist/
+node_modules/
+
+# Local Python hardware runtime files
+cat_cam.py
+catcam_env/
+yolov8n.pt

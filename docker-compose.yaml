@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  web-server:
+    build:
+      context: .
+      dockerfile: src/resources/Dockerfile.web
+    container_name: catcam-web-hub
+    ports:
+      - "3000:3000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - PI_API_TOKEN=${PI_API_TOKEN}
+      - NODE_ENV=production
+    restart: always
+
+  edge-camera:
+    build:
+      context: .
+      dockerfile: src/resources/Dockerfile.cam 
+    container_name: catcam-edge-core
+    depends_on:
+      - web-server
+    devices:
+      - "/dev/video0:/dev/video0"
+      - "/dev/gpiochip4:/dev/gpiochip4"
+      - "/dev/i2c-1:/dev/i2c-1"
+    volumes:
+      - /sys:/sys
+    environment:
+      - CLOUD_ENDPOINT=http://web-server:3000/api/upload
+      - PI_API_TOKEN=${PI_API_TOKEN}
+    privileged: true
+    restart: always

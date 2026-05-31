@@ -1,0 +1,6 @@
+{
+  "name": "Motion-Activated Cat Camera",
+  "description": "A motion-activated feline logging and camera system simulator and script generator for Raspberry Pi 5, leveraging NoIR cameras, PIR sensors, and YOLOv8.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
